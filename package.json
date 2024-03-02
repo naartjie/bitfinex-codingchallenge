@@ -1,0 +1,20 @@
+{
+  "name": "bitfinex-codingchallenge",
+  "version": "0.0.1",
+  "scripts": {
+    "start-grape-1": "grape --dp 20001 --aph 30001 --bn '127.0.0.1:20002'",
+    "start-grape-2": "grape --dp 20002 --aph 40001 --bn '127.0.0.1:20001'"
+  },
+  "devDependencies": {
+    "grenache-grape": "0.9.12"
+  },
+  "dependencies": {
+    "grenache-nodejs-http": "0.7.13",
+    "grenache-nodejs-link": "1.0.0"
+  },
+  "prettier": {
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true
+  }
+}
