@@ -1,9 +1,7 @@
-// basic orderbook implementation
-// taken from Gemini
-
 const orders = {
   buy: [],
   sell: [],
+  version: 0,
 }
 
 function addOrder(type, price, quantity) {
@@ -17,6 +15,8 @@ function addOrder(type, price, quantity) {
   }
 
   orders[type].push({ price, quantity })
+  orders.version += 1
+
   sortOrders(type, orders[type]) // Sort orders by price (ascending for buy, descending for sell)
   matchOrders() // Try to match buy and sell orders after adding a new order
 }
@@ -67,16 +67,9 @@ function matchOrders() {
   }
 }
 
-console.log(orders)
-
-// Example usage
-addOrder('buy', 100, 10)
-addOrder('sell', 110, 5)
-addOrder('buy', 95, 20) // Should match with the sell order at 100
-addOrder('sell', 100, 5)
-
-console.log(orders)
-
-// This is a simplified example. Real-world order matching systems
-// would handle more complex scenarios like order types (market, stop-loss),
-// partial fills, and order cancellation.
+module.exports = {
+  addOrder,
+  getOrders() {
+    return orders
+  },
+}
