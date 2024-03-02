@@ -1,11 +1,12 @@
-const orders = {
+'use strict'
+
+let orders = {
   buy: [],
   sell: [],
   version: 0,
 }
 
 function addOrder(type, price, quantity) {
-  console.log('addOrder', { type, price, quantity })
   // Validate order type (buy/sell) and quantity
   if (type !== 'buy' && type !== 'sell') {
     throw new Error('Invalid order type')
@@ -19,6 +20,8 @@ function addOrder(type, price, quantity) {
 
   sortOrders(type, orders[type]) // Sort orders by price (ascending for buy, descending for sell)
   matchOrders() // Try to match buy and sell orders after adding a new order
+
+  console.log('HERE', { orders })
 }
 
 function sortOrders(type, orderList) {
@@ -69,6 +72,9 @@ function matchOrders() {
 
 module.exports = {
   addOrder,
+  setOrders(newOrders) {
+    orders = newOrders
+  },
   getOrders() {
     return orders
   },

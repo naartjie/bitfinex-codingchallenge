@@ -1,24 +1,52 @@
-# Installation
+# Installing and Running
 
+```sh
+npm install
 
+# start 2 grape instances
+npm run grapes
 
-# Running
+# run as many nodes/peers as you want
+node ./src/peer.js
+```
 
-# TODO
--
+# Implementation
 
-# Limitations and issues
+This takes a very basic approach in order to achieve proof-of-concept. Each peer has an orderbook which is versioned. An order can only be placed if you have the latest version. If any peers have a version higher than yours, it means they have already accepted an order and you need to update your orderbook before placing an order. This isn't ideal "at scale", but it's basic enough to implement in a day, and does the job for the sake of this exercise.
 
-Orderbook size - it's stored as a js object, storage / perf is an issue
-prices stored as integers or a currency number type
+## Limitations and issues
 
-## Orderbook service
+If a peer stops and is restarted (on a different port), grape doesn't "drop it". Need to look into why/what's wrong. Right now I'm re-running `npm run grapes` command and it's not great DX.
 
-Consistency guarantees of DHT - went with a centralized service?
-gets around race condition by putting order service as a central place of matching orders. It's a single point of failure, and hence not HA.
+### Orderbook
 
-Future improvement: consensus / eventual consistency.
+It's a very simplistic implementation. The whole orderbook is stored as a JS object. Storage / perf would be an issue.
 
-If the server (service) stops, and is restarted on a different port, the client doesn't seem to pick that up. Need to look into why/what's wrong. (repro/screenshots)
+The prices are stored "as is", it would make sense either store cents as whol integers or alternatively use a currency number type from an npm lib.
+
+This implementation doesn't strictly update the local orderbook - it does so through the p2p mechanism by sending ourselves the same `create_order` message. We could simplify that by doing that update in place, and ignoring or not sending the create_order message to ourselves.
 
 # Next steps
+
+
+### Features
+Currently the creating of a new order is hardcoded in the `./src/peer.js`. I'd like to extend it to read `stdin` and be able to process commands such as:
+
+```
+buy 100 10
+buy 105 7
+buy 110 4
+```
+
+Add ability to cancel orders - need order.peer_id, so can only cancel our own orders
+
+
+### Security
+Defensive programming -> fail early for invalid inputs (for example payload.command)
+doesn't deal with bad actor peers
+
+### Perf
+Streamlining placing orders and distributing orderbook updates. This is a
+
+
+
